@@ -116,7 +116,7 @@ for subi = [1 : 7, 9:size(thr_fc_1f_PD.thresh_node_1f_mats, 1)]
 end
 
 graph_t = rmmissing(t);
-writetable(graph_t, [outpath, '/graph_table.csv']);
+writetable(graph_t, [outpath, ''')
 
 
 % Create a nsub*gp*thresh*fc*freq*68 matrix with condition specific
