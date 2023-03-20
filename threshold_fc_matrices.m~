@@ -5,8 +5,35 @@ addpath(genpath(uigetdir))
 % load files
 
 cd(uigetdir)
-load('FC_results_PD.mat')
-load('new_specmat_PD.mat')
+load('FC_results_HC.mat')
+load('specmat_HC.mat')
+
+% Change spec_mat because first creation overestimated true connexions (all
+% connexions associated with a node were deemed true when actually it takes
+% both nodes to have true oscillations to be functionnally coupled !
+
+new_spec_mat = zeros(size(spec_mat));
+
+for subi = 1:size(spec_mat,1)
+    for freqi = 1:size(spec_mat, 2)
+        
+        temp = squeeze(spec_mat(subi, freqi, :, :));
+        bli = unique(temp);
+        
+        for i  = 1:size(spec_mat, 3)
+            
+            for j = 1 : size(spec_mat, 4)
+                
+                if unique(spec_mat(subi, freqi, i, :)) == 1 & length(unique(spec_mat(subi, freqi, :, j))) == 1                    
+                    new_spec_mat(subi, freqi, i, j) = 1;
+                end
+                
+            end
+        end
+        
+    end
+end
+
 
 
 
@@ -48,7 +75,7 @@ for subi = 1:size(thresh_node_mats, 1)
             
             
             % Now threshold further using specparam results
-            temp_thresh_mat = squeeze(new_spec_mat(subi, freqi,:,:));
+            temp_thresh_mat = squeeze(spec_mat(subi, freqi,:,:));
             
             temp_fc_mat_4_1f(temp_thresh_mat == 0) = 0;
             
@@ -69,8 +96,7 @@ end
 
 for freqi = 1:5
     figure
-    imagesc(squeeze(mean(thresh_node_1f_mats(:,5,:,:,freqi),1)))
-    set(gca,'clim',[0,1])
-    colorbar
+    imagesc(squeeze(mean(thresh_node_mats(:,5,:,:,freqi),1)))
+    set(gca,'clim',[0,0.5])
 end
 
