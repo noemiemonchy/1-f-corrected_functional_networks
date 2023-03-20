@@ -5,8 +5,8 @@ addpath(genpath(uigetdir))
 % load files
 
 cd(uigetdir)
-load('FC_results_PD.mat')
-load('new_specmat_PD.mat')
+load('FC_results_HC.mat')
+load('new_specmat_HC.mat')
 
 
 
@@ -58,10 +58,6 @@ for subi = 1:size(thresh_node_mats, 1)
     end
     
 end
-
-
-
-
 
 
 

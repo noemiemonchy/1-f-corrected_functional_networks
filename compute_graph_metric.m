@@ -175,23 +175,57 @@ nthresh_5 = round((5 * npc)/100);
 
 %% Number of nodes with true oscillations
 
-% Create output matrix
 
-nnode = zeros(size(new_spec_mat, 1), ...
-    size(new_spec_mat, 2));
+group = {'HC', 'PD'};
+frequencies = {'delta', 'theta', 'alpha', 'beta', 'gamma'};
 
-for subi = 1:size(new_spec_mat, 1)
-    for freqi = 1:size(new_spec_mat, 2)
+i = 1; % initiate counter to fill rows
+
+varnames = {'sub', 'group', ...
+    'frequencies', 'n_nodes_kept', };
+vartypes = {'double', 'string',...
+    'string','double'};
+
+t = table('Size', [10000, 4], 'VariableTypes', vartypes, 'VariableNames', varnames);
+% for HC
+for subi = 1:size(spec_mat_HC.new_spec_mat, 1)
+    for freqi = 1:size(spec_mat_HC.new_spec_mat, 2)
         
         % get temp mat
         temp = squeeze(new_spec_mat(subi,freqi,:,:));
         % store number of nodes kept after 1/f
-        nnode(subi, freqi) = nnz(sum(temp)); % nnz counts non zero elements
+        nnode = nnz(sum(temp)); % nnz counts non zero elements
+        
+        sub = subi ;
+        gp = 'HC';
+        freq = frequencies{freqi};
+        t(i,:) = {sub, gp, freq, nnode};
+        i = i+1;
     end
     
 end
 
 
+% for PD
+for subi = 1:size(spec_mat_PD.new_spec_mat, 1)
+    for freqi = 1:size(spec_mat_PD.new_spec_mat, 2)
+        
+        % get temp mat
+        temp = squeeze(new_spec_mat(subi,freqi,:,:));
+        % store number of nodes kept after 1/f
+        nnode = nnz(sum(temp)); % nnz counts non zero elements
+        
+        sub = subi ;
+        gp = 'PD';
+        freq = frequencies{freqi};
+        t(i,:) = {sub, gp, freq, nnode};
+        i = i+1;
+    end
+    
+end
+
+graph_t = rmmissing(t);
+writetable(graph_t, [outpath, '/graph_table_nodes_kept_1f_only.csv']);
 
 %% Overall n connections remaining after 1/f thresh
 
@@ -266,6 +300,10 @@ for subi = 1:size(spec_mat_PD.new_spec_mat, 1)
     end
     
 end
+
+graph_t = rmmissing(t);
+writetable(graph_t, [outpath, '/graph_table_connexions_kept_1f_only.csv']);
+
 
 %% n connections remaining after 5% and 1/f thresh
 
@@ -346,5 +384,5 @@ for subi = 1:size(thr_fc_1f_PD.thresh_node_1f_mats, 1)
 end
 
 graph_t = rmmissing(t);
-writetable(graph_t, [outpath, '/graph_table_connexions_kept.csv']);
+writetable(graph_t, [outpath, '/graph_table_connexions_kept_5pct_and_1f.csv']);
 
