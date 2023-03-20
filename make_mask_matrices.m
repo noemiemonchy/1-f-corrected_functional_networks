@@ -7,7 +7,7 @@ freqranges = {[2, 4], [5, 7], [8, 12], [13, 29], [30, 45]};
 nfreq = length(freqranges);
 spec_mat = zeros(nsub, nfreq, 68, 68);
 
-for subi = [1 : 7, 9:nsub]
+for subi = [1 :nsub]
     cd(sublist(subi).name)
     subpath = dir('sub*');
     cd(subpath(1).name)
@@ -35,4 +35,32 @@ for nROI = 1:68
 end
 cd ..
 cd ..
+end
+
+
+
+% Change spec_mat because first creation overestimated true connexions (all
+% connexions associated with a node were deemed true when actually it takes
+% both nodes to have true oscillations to be functionnally coupled !
+
+new_spec_mat = zeros(size(spec_mat));
+
+for subi = 1:size(spec_mat,1)
+    for freqi = 1:size(spec_mat, 2)
+        
+        temp = squeeze(spec_mat(subi, freqi, :, :));
+        bli = unique(temp);
+        
+        for i  = 1:size(spec_mat, 3)
+            
+            for j = 1 : size(spec_mat, 4)
+                
+                if unique(spec_mat(subi, freqi, i, :)) == 1 & length(unique(spec_mat(subi, freqi, :, j))) == 1                    
+                    new_spec_mat(subi, freqi, i, j) = 1;
+                end
+                
+            end
+        end
+        
+    end
 end

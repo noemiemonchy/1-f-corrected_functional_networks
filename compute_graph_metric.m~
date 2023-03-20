@@ -120,7 +120,7 @@ writetable(graph_t, [outpath, '/graph_table.csv']);
 
 
 % Create a nsub*gp (1 = HC, 2 = PD) *thresh (1=node, 2 = node_1f)*
-% fc (1 ='plv', 2='wpli', 3='ciplv', 4='oenv', 5='henv')*
+% fc (1 ='plv', 2='wpli', 3='ciplv', 4='oenv', 5='henv')* 
 % freq (1 = delta, 2=theta, 3=alpha, 4=beta, 5=gamma)
 % *68 matrix with condition specific
 % degrees, to investigate degree distribution
@@ -186,7 +186,7 @@ for subi = 1:size(new_spec_mat, 1)
         % get temp mat
         temp = squeeze(new_spec_mat(subi,freqi,:,:));
         % store number of nodes kept after 1/f
-        nnode(subi, freqi) = nnz(sum(temp)); % nnz counts non zero elements
+        nnode(subi, freqi) = nnz(sum(temp)); % nnz counts non zero elements        
     end
     
 end
@@ -210,7 +210,7 @@ varnames = {'sub', 'group', ...
 vartypes = {'double', 'string',...
     'string','double'};
 
-t = table('Size', [10000, 4], 'VariableTypes', vartypes, 'VariableNames', varnames);
+t = table('Size', [10000, 5], 'VariableTypes', vartypes, 'VariableNames', varnames);
 
 % Create output matrix
 
@@ -230,46 +230,14 @@ for subi = 1:size(spec_mat_HC.new_spec_mat, 1)
         temp_tri(1:n+1:end) = 0; % clear diagonal
         
         % store proportion of connections kept after 1/f
-        nconn_1f_global = (nnz(temp_tri) * 100) / npc; % nnz counts non zero elements
-        sub = subi ;
-        gp = 'HC';
-        freq = frequencies{freqi};
-        t(i,:) = {sub, gp, freq, nconn_1f_global};
-        i = i+1;
-        
-        
-    end
-    
-end
-
-% For PD
-for subi = 1:size(spec_mat_PD.new_spec_mat, 1)
-    for freqi = 1:size(spec_mat_PD.new_spec_mat, 2)
-        
-        % get temp mat
-        temp = squeeze(spec_mat_PD.new_spec_mat(subi,freqi,:,:));
-        
-        % keep lower triangular part
-        temp_tri = tril(temp);
-        n = size(temp_tri, 1);
-        temp_tri(1:n+1:end) = 0; % clear diagonal
-        
-        % store proportion of connections kept after 1/f
-        nconn_1f_global = (nnz(temp_tri) * 100) / npc; % nnz counts non zero elements
-        sub = subi ;
-        gp = 'PD';
-        freq = frequencies{freqi};
-        t(i,:) = {sub, gp, freq, nconn_1f_global};
-        i = i+1;
-        
-        
+        nconn_1f_global = (nnz(temp_tri) * 100) / npc; % nnz counts non zero elements        
     end
     
 end
 
 %% n connections remaining after 5% and 1/f thresh
 
-% Create table
+% Create table 
 
 thr_fc_1f_HC = load('Thresholded_node_1f_FC_results_HC.mat');
 thr_fc_1f_PD = load('Thresholded_node_1f_FC_results_PD.mat');
@@ -291,26 +259,26 @@ t = table('Size', [10000, 5], 'VariableTypes', vartypes, 'VariableNames', varnam
 for subi = 1:size(thr_fc_1f_HC.thresh_node_1f_mats, 1)
     for freqi = 1:size(thr_fc_1f_HC.thresh_node_1f_mats, 5)
         for fci = 1: size(thr_fc_1f_HC.thresh_node_1f_mats, 2)
-            
-            % get temp mat
-            temp = squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi));
-            
-            % keep lower triangular part
-            temp_tri = tril(temp);
-            
-            % binarize
-            temp_tri_bin = logical(temp_tri);
-            
-            % store proportion of connections kept after 1/f
-            nconn_pthresh_1f = (nnz(temp_tri_bin) * 100) / npc;
-            
+        
+        % get temp mat
+        temp = squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi));
+        
+        % keep lower triangular part
+        temp_tri = tril(temp);
+        
+        % binarize
+        temp_tri_bin = logical(temp_tri);
+        
+        % store proportion of connections kept after 1/f
+        nconn_pthresh_1f = (nnz(temp_tri_bin) * 100) / npc;
+        
             sub = subi ;
             gp = 'HC';
             fc = fc_meth{fci};
             freq = frequencies{freqi};
             t(i,:) = {sub, gp, fc, freq, nconn_pthresh_1f};
             i = i+1;
-            
+        
         end
     end
     
@@ -320,26 +288,26 @@ end
 for subi = 1:size(thr_fc_1f_PD.thresh_node_1f_mats, 1)
     for freqi = 1:size(thr_fc_1f_PD.thresh_node_1f_mats, 5)
         for fci = 1: size(thr_fc_1f_PD.thresh_node_1f_mats, 2)
-            
-            % get temp mat
-            temp = squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi));
-            
-            % keep lower triangular part
-            temp_tri = tril(temp);
-            
-            % binarize
-            temp_tri_bin = logical(temp_tri);
-            
-            % store proportion of connections kept after 1/f
-            nconn_pthresh_1f = (nnz(temp_tri_bin) * 100) / npc;
-            
+        
+        % get temp mat
+        temp = squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi));
+        
+        % keep lower triangular part
+        temp_tri = tril(temp);
+        
+        % binarize
+        temp_tri_bin = logical(temp_tri);
+        
+        % store proportion of connections kept after 1/f
+        nconn_pthresh_1f = (nnz(temp_tri_bin) * 100) / npc;
+        
             sub = subi ;
             gp = 'PD';
             fc = fc_meth{fci};
             freq = frequencies{freqi};
             t(i,:) = {sub, gp, fc, freq, nconn_pthresh_1f};
             i = i+1;
-            
+        
         end
     end
     
