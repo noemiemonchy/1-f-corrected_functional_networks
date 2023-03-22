@@ -84,6 +84,10 @@ for subi = [1 :7, 9:nsub]
         
         if npeaks > 1
             if freqranges{4}(1)<temp(2,1)<freqranges{4}(2)
+                
+                
+                % refaire avec compris entre tant et tant en prenant un bin
+                % fréquentiel ??
                 if mod(temp(2,1)/temp(1,1),1)==0
                     harmo_pd(subi, nROI) = 1;
                 else
