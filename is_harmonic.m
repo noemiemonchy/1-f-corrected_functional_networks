@@ -1,7 +1,7 @@
 %% Check if beta oscillations are alpha harmonics
 
 
-% for HC
+%% for HC
 
 path = uigetdir;
 cd(path)
@@ -44,7 +44,16 @@ for subi = 1 :nsub
     cd ..
 end
 
-% Same for PD
+%% Check if any beta peaks is a harmonic of another alpha peak ?
+
+% List all the second peaks
+
+% List all the first peaks
+
+
+
+
+%% Same for PD
 
 path = uigetdir;
 cd(path)
