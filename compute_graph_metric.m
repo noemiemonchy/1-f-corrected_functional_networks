@@ -174,7 +174,8 @@ nthresh_5 = round((5 * npc)/100);
 
 
 %% Number of nodes with true oscillations
-
+spec_mat_HC = load('new_specmat_HC');
+spec_mat_PD = load('new_specmat_PD');
 
 group = {'HC', 'PD'};
 frequencies = {'delta', 'theta', 'alpha', 'beta', 'gamma'};
@@ -192,7 +193,7 @@ for subi = 1:size(spec_mat_HC.new_spec_mat, 1)
     for freqi = 1:size(spec_mat_HC.new_spec_mat, 2)
         
         % get temp mat
-        temp = squeeze(new_spec_mat(subi,freqi,:,:));
+        temp = squeeze(spec_mat_HC.new_spec_mat(subi,freqi,:,:));
         % store number of nodes kept after 1/f
         nnode = nnz(sum(temp)); % nnz counts non zero elements
         
@@ -211,7 +212,7 @@ for subi = 1:size(spec_mat_PD.new_spec_mat, 1)
     for freqi = 1:size(spec_mat_PD.new_spec_mat, 2)
         
         % get temp mat
-        temp = squeeze(new_spec_mat(subi,freqi,:,:));
+        temp = squeeze(spec_mat_PD.new_spec_mat(subi,freqi,:,:));
         % store number of nodes kept after 1/f
         nnode = nnz(sum(temp)); % nnz counts non zero elements
         
