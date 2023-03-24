@@ -143,59 +143,58 @@ ggarrange(p1, p2,
           ncol = 2, nrow = 1)
 
 
+## Plot degree distribution
 
+degree_data = as_tibble(read.table('graph_table_degree_distribution.csv', sep = ",", header = TRUE))
+degree_data <- degree_data %>% 
+  filter(!(group == 'PD' & sub==8))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-data = data[which(data$fc_meth == "plv"),]
-
-clust = ggplot(data[which(data$frequencies == 'beta'),], aes(x = thresh_met, y = mean_clustering, fill = group))+
-  geom_violin(trim=FALSE, size = 1, color = NA)+
-  scale_fill_manual(values=c("#884da7", "#b67823")) +
-  geom_dotplot(binaxis = 'y', stackdir = "center", position = "dodge", method = "histodot", dotsize = 0.5)+
-  theme_classic()
-
-path = ggplot(data[which(data$frequencies == 'beta'),], aes(x = thresh_met, y = path, fill = group))+
-  geom_violin(trim=FALSE, size = 1, color = NA)+
-  scale_fill_manual(values=c("#884da7", "#b67823")) +
-  geom_dotplot(binaxis = 'y', stackdir = "center", position = "dodge", method = "histodot", dotsize = 0.5)+
-  theme_classic()
-
-strength = ggplot(data[which(data$frequencies == 'beta'),], aes(x = thresh_met, y = mean_strength, fill = group))+
-  geom_violin(trim=FALSE, size = 1, color = NA)+
-  scale_fill_manual(values=c("#884da7", "#b67823")) +
-  geom_dotplot(binaxis = 'y', stackdir = "center", position = "dodge", method = "histodot", dotsize = 0.5)+
-  theme_classic()
-
-betw = ggplot(data[which(data$frequencies == 'beta'),], aes(x = thresh_met, y = mean_betweenness, fill = group))+
-  geom_violin(trim=FALSE, size = 1, color = NA)+
-  geom_dotplot(binaxis = 'y', stackdir = "center", position = "dodge", method = "histodot", dotsize = 0.5)+
-  scale_fill_manual(values=c("#884da7", "#b67823")) +
-  theme_classic()
-
-ggarrange(clust, path, strength, betw,
-          ncol = 2, nrow = 2)
+  deg_beta <- degree_data %>% 
+  filter(frequencies == 'beta', fc_meth == 'oenv', thresh_met == 'node')
+  p = ggplot(deg_beta, aes(x=degree, color=group)) +
+    stat_ecdf(geom = "step", pad = F)+
+    theme_minimal()+
+    ylab(  c("Empirical cumulative distribution")  )  +
+    xlab(  c("Beta orthogonalized aec degree")  )  +
+    theme(panel.border = element_rect(colour = "black", fill=NA, size=2),
+          axis.line = element_line(colour = "black",size=1),
+          axis.ticks = element_line(size=1,color="black"),
+          axis.text = element_text(color="black"),
+          axis.ticks.length=unit(0.2,"cm"),
+          legend.position = c(0.875, 0.8),
+          plot.title = element_text(size = 20))+
+    font("xylab",size=15)+  
+    font("xy",size=15)+ 
+    font("xy.text", size = 15) +  
+    font("legend.text",size = 15)+
+    guides(fill = guide_legend(override.aes = list(beta = 1,color="black")))+
+    ggtitle("5% thresholding")+
+    scale_color_manual(values=c("#884da7", "#b67823"))+
+    ylim(0, 1)
+  
+  
+  deg_beta <- degree_data %>% 
+    filter(frequencies == 'beta', fc_meth == 'oenv', thresh_met == 'node_1f')
+  p2 = ggplot(deg_beta, aes(x=degree, color=group)) +
+    stat_ecdf(geom = "step",pad = F, show.legend = F)+
+    theme_minimal()+
+    ylab(  c("Empirical cumulative distribution")  )  +
+    xlab(  c("Beta orthogonalized aec degree")  )  +
+    theme(panel.border = element_rect(colour = "black", fill=NA, size=2),
+          axis.line = element_line(colour = "black",size=1),
+          axis.ticks = element_line(size=1,color="black"),
+          axis.text = element_text(color="black"),
+          axis.ticks.length=unit(0.2,"cm"),
+          legend.position = c(0.875, 0.9),
+          plot.title = element_text(size = 20))+
+    font("xylab",size=15)+  
+    font("xy",size=15)+ 
+    font("xy.text", size = 15) +  
+    font("legend.text",size = 15)+
+    guides(fill = guide_legend(override.aes = list(beta = 1,color="black")))+
+    ggtitle("5% thresholding + 1/f")+
+    scale_color_manual(values=c("#884da7", "#b67823"))+
+    ylim(0, 1)
+  
+  ggarrange(p, p2,
+            ncol = 2, nrow = 1)
