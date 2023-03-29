@@ -155,4 +155,4 @@ end
  [h,p,ci,stats] = ttest2(mean(exponent_hc, 2), mean(exponent_pd, 2));
  [h,p,ci,stats] = ttest2(mean(offset_hc, 2), mean(offset_pd, 2));
  
- computeCohen_d(mean(offset_hc, 2), mean(offset_pd, 2))
+ compu
