@@ -4,7 +4,7 @@ addpath(genpath(uigetdir))
 
 % load files
 
-cd(uigetdir)
+cd(uigetdir) % go where the following file are stored
 load('FC_results_HC.mat')
 load('new_specmat_HC.mat')
 

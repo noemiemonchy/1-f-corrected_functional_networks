@@ -1,5 +1,5 @@
 
-cd(uigetdir)
+cd(uigetdir) % go to the brainstorm data folder containing the subjects data
 addpath(genpath(uigetdir)) % add bst to path
 
 % Get subject folders list
