@@ -55,7 +55,7 @@ for subi = 1:size(spec_mat,1)
             
             for j = 1 : size(spec_mat, 4)
                 
-                if unique(spec_mat(subi, freqi, i, :)) == 1 & length(unique(spec_mat(subi, freqi, :, j))) == 1                    
+                if unique(spec_mat(subi, freqi, i, :)) == 1 & unique(spec_mat(subi, freqi, :, j)) == 1                    
                     new_spec_mat(subi, freqi, i, j) = 1;
                 end
                 
