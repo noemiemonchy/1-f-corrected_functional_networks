@@ -5,6 +5,7 @@ addpath(genpath(uigetdir))
 % load files
 
 cd(uigetdir) % go where the following file are stored
+% here example with data from dataset A - HC
 load('FC_results_HC.mat')
 load('new_specmat_HC.mat')
 
