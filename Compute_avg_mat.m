@@ -12,7 +12,7 @@ sub_list = sub_list(startsWith({sub_list.name},'sub'));
 result_mat = zeros(length(sub_list), 5, 68, 68, 5);
 
 % Loop through subjects
-for subi = [1:7, 9:length(sub_list)]
+for subi = [1:7, 9:length(sub_list)] % do not take into account the participant 8 (technical problem)
     
     cd(sub_list(subi).name)
     
@@ -27,7 +27,7 @@ for subi = [1:7, 9:length(sub_list)]
     n_ciplv_files = length(dir('*ciplv*'));
     n_wpli_files = length(dir('*wpli*'));
     n_henv_files = length(dir('*henv*'))/2;
-    n_oenv_files = length(dir('*henv*'))/2;
+    n_oenv_files = length(dir('*oenv*'))/2;
     
     plv_epochs = zeros(n_plv_files, 68, 68, 5);
     ciplv_epochs = zeros(n_ciplv_files, 68, 68, 5);
@@ -43,7 +43,7 @@ for subi = [1:7, 9:length(sub_list)]
     oenv_c = 1;
     
     % Loop through connectivity method
-    for epochi = 1:length(dir('timefreq_connectn*'))
+    for epochi = 1:length(dir('timefreq_connectn*')) % to find connectivity matrices 
         epoch = load(epochs(epochi).name);
         fc_method = epoch.Comment(1:4);
         % Read connectivity matrices in the right format,
