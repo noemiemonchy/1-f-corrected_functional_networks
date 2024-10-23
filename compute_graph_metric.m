@@ -17,7 +17,7 @@ thr_fc_1f_PD = load('Thresholded_node_1f_FC_results_PD.mat');
 % Create a csv file containing ROI-averaged graph metrics values
 % with headers:
 % Sub, Gp, Thresh_meth(node or node+1/f), FC_meth(5), Frequencies(5),
-% mean_degree, mean_strength, mean_clustering, path, mean_betweenness
+% mean_clustering, path, mean_betweenness, global_efficiency
 
 group = {'HC', 'PD'};
 thresh_meth = {'node', '1f_node'};
@@ -28,11 +28,11 @@ i = 1; % initiate counter to fill rows
 
 varnames = {'sub', 'group','thresh_met', 'fc_meth', ...
     'frequencies', 'mean_clustering',...
-    'path', 'mean_betweenness'};
+    'path', 'mean_betweenness','global_efficiency'};
 vartypes = {'double', 'string',...
-    'string','string','string','double','double','double'};
+    'string','string','string','double','double','double','double'};
 
-t = table('Size', [10000, 8], 'VariableTypes', vartypes, 'VariableNames', varnames);
+t = table('Size', [10000, 9], 'VariableTypes', vartypes, 'VariableNames', varnames);
 % HC
 % thresh node
 for subi = 1 : size(thr_fc_HC.thresh_node_mats, 1)
@@ -46,7 +46,8 @@ for subi = 1 : size(thr_fc_HC.thresh_node_mats, 1)
             mclu = mean(clustering_coef_wu(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi))));
             path = charpath(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi)));
             mbet = mean(betweenness_wei(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi))));
-            t(i,:) = {sub, gp, thr, fc, freq, mdeg, mstr, mclu, path, mbet};
+            effi = mean(efficiency_wei(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi))));
+            t(i,:) = {sub, gp, thr, fc, freq, mclu, path, mbet, effi};
             i = i+1;
         end
     end
@@ -63,7 +64,8 @@ for subi = 1 : size(thr_fc_1f_HC.thresh_node_1f_mats, 1)
             mclu = mean(clustering_coef_wu(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi))));
             path = charpath(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi)));
             mbet = mean(betweenness_wei(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi))));
-            t(i,:) = {sub, gp, thr, fc, freq, mdeg, mstr, mclu, path, mbet};
+            effi = mean(efficiency_wei(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi))));
+            t(i,:) = {sub, gp, thr, fc, freq, mclu, path, mbet, effi};
             i = i+1;
         end
     end
@@ -82,7 +84,8 @@ for subi = [1 : 7, 9: size(thr_fc_PD.thresh_node_mats, 1)]
             mclu = mean(clustering_coef_wu(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi))));
             path = charpath(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi)));
             mbet = mean(betweenness_wei(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi))));
-            t(i,:) = {sub, gp, thr, fc, freq, mdeg, mstr, mclu, path, mbet};
+            effi = mean(efficiency_wei(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi))));
+            t(i,:) = {sub, gp, thr, fc, freq, mclu, path, mbet, effi};
             i = i+1;
         end
     end
@@ -100,7 +103,8 @@ for subi = [1 : 7, 9:size(thr_fc_1f_PD.thresh_node_1f_mats, 1)]
             mclu = mean(clustering_coef_wu(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi))));
             path = charpath(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi)));
             mbet = mean(betweenness_wei(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi))));
-            t(i,:) = {sub, gp, thr, fc, freq, mdeg, mstr, mclu, path, mbet};
+            effi = mean(efficiency_wei(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi))));
+            t(i,:) = {sub, gp, thr, fc, freq, mclu, path, mbet, effi};
             i = i+1;
             
         end
