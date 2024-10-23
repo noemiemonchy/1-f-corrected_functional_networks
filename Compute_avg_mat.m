@@ -12,7 +12,7 @@ sub_list = sub_list(startsWith({sub_list.name},'sub'));
 result_mat = zeros(length(sub_list), 5, 68, 68, 5);
 
 % Loop through subjects
-for subi = [1:7, 9:length(sub_list)] % DATASET A : do not take into account the participant 8 (technical problem); DATASET B : for subi = [1:length(sub_list)]
+for subi = [1:length(sub_list)]
     
     cd(sub_list(subi).name)
     
