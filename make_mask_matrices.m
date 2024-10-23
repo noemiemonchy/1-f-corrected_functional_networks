@@ -33,9 +33,9 @@ for nROI = 1:68
     end
     
 end
-%cd ..
-%cd ..
-%end
+cd ..
+cd ..
+end
 
 
 
