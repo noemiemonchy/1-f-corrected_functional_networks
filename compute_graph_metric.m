@@ -5,7 +5,7 @@ addpath(genpath(uigetdir))
 
 cd(uigetdir)
 outpath = 'Graph_metrics_results/';
-
+% here, example with the dataset A
 thr_fc_HC = load('Thresholded_node_FC_results_HC.mat');
 thr_fc_PD = load('Thresholded_node_FC_results_PD.mat');
 thr_fc_1f_HC = load('Thresholded_node_1f_FC_results_HC.mat');
@@ -20,19 +20,19 @@ thr_fc_1f_PD = load('Thresholded_node_1f_FC_results_PD.mat');
 % mean_degree, mean_strength, mean_clustering, path, mean_betweenness
 
 group = {'HC', 'PD'};
-thresh_meth = {'node', 'node_1f'};
+thresh_meth = {'node', '1f_node'};
 fc_meth = {'plv', 'wpli', 'ciplv', 'oenv', 'henv'};
 frequencies = {'delta', 'theta', 'alpha', 'beta', 'gamma'};
 
 i = 1; % initiate counter to fill rows
 
 varnames = {'sub', 'group','thresh_met', 'fc_meth', ...
-    'frequencies', 'mean_degree', 'mean_strength', 'mean_clustering',...
+    'frequencies', 'mean_clustering',...
     'path', 'mean_betweenness'};
 vartypes = {'double', 'string',...
-    'string','string','string','double','double','double','double','double'};
+    'string','string','string','double','double','double'};
 
-t = table('Size', [10000, 10], 'VariableTypes', vartypes, 'VariableNames', varnames);
+t = table('Size', [10000, 8], 'VariableTypes', vartypes, 'VariableNames', varnames);
 % HC
 % thresh node
 for subi = 1 : size(thr_fc_HC.thresh_node_mats, 1)
@@ -43,8 +43,6 @@ for subi = 1 : size(thr_fc_HC.thresh_node_mats, 1)
             thr = 'node';
             fc = fc_meth{fci};
             freq = frequencies{freqi};
-            mdeg = mean(degrees_und(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi))));
-            mstr = mean(strengths_und(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi))));
             mclu = mean(clustering_coef_wu(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi))));
             path = charpath(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi)));
             mbet = mean(betweenness_wei(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi))));
@@ -62,8 +60,6 @@ for subi = 1 : size(thr_fc_1f_HC.thresh_node_1f_mats, 1)
             thr = 'node_1f';
             fc = fc_meth{fci};
             freq = frequencies{freqi};
-            mdeg = mean(degrees_und(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi))));
-            mstr = mean(strengths_und(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi))));
             mclu = mean(clustering_coef_wu(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi))));
             path = charpath(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi)));
             mbet = mean(betweenness_wei(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi))));
@@ -83,8 +79,6 @@ for subi = [1 : 7, 9: size(thr_fc_PD.thresh_node_mats, 1)]
             thr = 'node';
             fc = fc_meth{fci};
             freq = frequencies{freqi};
-            mdeg = mean(degrees_und(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi))));
-            mstr = mean(strengths_und(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi))));
             mclu = mean(clustering_coef_wu(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi))));
             path = charpath(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi)));
             mbet = mean(betweenness_wei(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi))));
@@ -103,8 +97,6 @@ for subi = [1 : 7, 9:size(thr_fc_1f_PD.thresh_node_1f_mats, 1)]
             thr = 'node_1f';
             fc = fc_meth{fci};
             freq = frequencies{freqi};
-            mdeg = mean(degrees_und(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi))));
-            mstr = mean(strengths_und(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi))));
             mclu = mean(clustering_coef_wu(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi))));
             path = charpath(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi)));
             mbet = mean(betweenness_wei(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi))));
@@ -117,100 +109,6 @@ end
 
 graph_t = rmmissing(t);
 writetable(graph_t, [outpath, '/graph_table.csv']);
-
-
-% Create a nsub*gp (1 = HC, 2 = PD) *thresh (1=node, 2 = node_1f)*
-% fc (1 ='plv', 2='wpli', 3='ciplv', 4='oenv', 5='henv')*
-% freq (1 = delta, 2=theta, 3=alpha, 4=beta, 5=gamma)
-% *68 matrix with condition specific
-% degrees, to investigate degree distribution
-
-degree_dist = zeros(30, 2, 2, 5, 5, 68);
-
-for subi = 1 : size(thr_fc_HC.thresh_node_mats, 1)
-    for fci = 1 : size(thr_fc_HC.thresh_node_mats, 2)
-        for freqi = 1 : size(thr_fc_HC.thresh_node_mats, 5)
-            degree_dist(subi, 1, 1, fci, freqi, :) = degrees_und(squeeze(thr_fc_HC.thresh_node_mats(subi,fci,:,:,freqi)));
-        end
-    end
-end
-% thresh node 1/f
-for subi = 1 : size(thr_fc_1f_HC.thresh_node_1f_mats, 1)
-    for fci = 1 : size(thr_fc_1f_HC.thresh_node_1f_mats, 2)
-        for freqi = 1 : size(thr_fc_1f_HC.thresh_node_1f_mats, 5)
-            degree_dist(subi, 1, 2, fci, freqi, :) = degrees_und(squeeze(thr_fc_1f_HC.thresh_node_1f_mats(subi,fci,:,:,freqi)));
-        end
-    end
-end
-% PD
-% thresh node
-for subi = [1 : 7, 9: size(thr_fc_PD.thresh_node_mats, 1)]
-    for fci = 1 : size(thr_fc_PD.thresh_node_mats, 2)
-        for freqi = 1 : size(thr_fc_PD.thresh_node_mats, 5)
-            degree_dist(subi, 2, 1, fci, freqi, :) = degrees_und(squeeze(thr_fc_PD.thresh_node_mats(subi,fci,:,:,freqi)));
-        end
-    end
-end
-% thresh node 1/f
-for subi = [1 : 7, 9:size(thr_fc_1f_PD.thresh_node_1f_mats, 1)]
-    for fci = 1 : size(thr_fc_1f_PD.thresh_node_1f_mats, 2)
-        for freqi = 1 : size(thr_fc_1f_PD.thresh_node_1f_mats, 5)
-            degree_dist(subi, 2, 2, fci, freqi, :) = degrees_und(squeeze(thr_fc_1f_PD.thresh_node_1f_mats(subi,fci,:,:,freqi)));
-        end
-    end
-end
-
-save('degree_dist.mat', 'degree_dist');
-
-
-%% Create a table (nROIs rows and columns = sub, gp, threshmet, freq, degree, ...
-%  with degree distribution
-group = {'HC', 'PD'};
-thresh_meth = {'node', 'node_1f'};
-fc_meth = {'plv', 'wpli', 'ciplv', 'oenv', 'henv'};
-frequencies = {'delta', 'theta', 'alpha', 'beta', 'gamma'};
-
-% degree_dist :
-% nsub*gp (1 = HC, 2 = PD) *thresh (1=node, 2 = node_1f)*
-% fc (1 ='plv', 2='wpli', 3='ciplv', 4='oenv', 5='henv')*
-% freq (1 = delta, 2=theta, 3=alpha, 4=beta, 5=gamma)
-% *68 matrix
-
-i = 1; % initiate counter to fill rows
-
-varnames = {'sub', 'nroi', 'group','thresh_met', 'fc_meth', ...
-    'frequencies', 'degree', };
-vartypes = {'double', 'double', 'string','string','string',...
-    'string', 'double'};
-
-t = table('Size', [300000, 7], 'VariableTypes', vartypes, 'VariableNames', varnames);
-
-for subi = 1 : size(degree_dist, 1)
-    for gpi = 1:2
-        for threshi = 1 : size(degree_dist, 3)
-            for fci = 1 : size(degree_dist, 4)
-                for freqi = 1 : size(degree_dist, 5)
-                    for ri = 1:68
-                        
-                        sub = subi ;
-                        gp = group{gpi};
-                        thr = thresh_meth{threshi};
-                        fc = fc_meth{fci};
-                        freq = frequencies{freqi};
-                        nroi = ri;
-                        degree = degree_dist(subi, gpi, threshi, fci, freqi, nroi);
-                        t(i,:) = {sub, nroi, gp, thr, fc, freq, degree};
-                        
-                        i = i+1;
-                    end
-                end
-            end
-        end
-    end
-end
-
-graph_t = rmmissing(t);
-writetable(graph_t, [outpath, '/graph_table_degree_distribution.csv']);
 
 
 %% Get % of nodes retained from the 5% thresholded mat after 1/f thresh
