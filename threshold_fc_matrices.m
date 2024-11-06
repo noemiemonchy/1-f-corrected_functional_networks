@@ -13,7 +13,6 @@ load('new_specmat_HC.mat')
 
 % Mat size : nsub * fc method * nROI * nROI * frequencies
 thresh_node_mats = zeros(size(result_mat));
-thresh_node_1f_mats = zeros(size(result_mat));
 
 
 for subi = 1:size(thresh_node_mats, 1)
