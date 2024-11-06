@@ -21,3 +21,5 @@ This project is licensed under the CC-BY-NC-ND 4.0 International license.
 
 **ACKNOWLEDGMENTS**
 Many thanks to Dr Joan Duprez, the primary contributor to these scripts, as well as to Dr Julien Modolo and Pr Bradley Voytek for their valuable feedback on the analyses conducted.
+
+If errors were to occur or if you have question regarding the code, feel free to email me at : noemie.monchy.1@univ-rennes1.fr 
