@@ -64,3 +64,34 @@ for subi = 1:size(spec_mat,1)
         
     end
 end
+
+
+
+% Matrix with functional connectivity results in ROIs exhibiting connections based on aperiodicity-unbiased oscillations
+
+cd(uigetdir) % go where the following file are stored
+load('FC_results_HC.mat')
+load('new_spec_mat_HC.mat')
+
+% Mat size : nsub * fc method * nROI * nROI * frequencies
+thresh_node_1f = zeros(size(result_mat));
+
+
+for subi = 1:size(thresh_node_1f, 1)
+    
+    for fci = 1:size(thresh_node_1f, 2)
+        
+        for freqi = 1:size(thresh_node_1f, 5)
+            
+            % mask matrice 1/f
+            temp_spec_mat = squeeze(new_spec_mat(subi, freqi,:,:));
+            temp_fc_mat = squeeze(result_mat(subi, fci,:,:,freqi));
+            
+            temp_fc_mat(temp_spec_mat == 0) = 0;
+            temp_fc_mat_4_prop = temp_fc_mat;
+            
+            thresh_node_1f(subi,fci,:,:,freqi) = temp_fc_mat_4_prop;
+           
+        end     
+    end 
+end
