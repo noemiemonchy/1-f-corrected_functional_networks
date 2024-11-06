@@ -26,26 +26,6 @@ for subi = 1:size(thresh_node_mats, 1)
             temp_fc_mat = squeeze(result_mat(subi, fci,:,:,freqi));
             thresh_node_mats(subi, fci,:,:,freqi) = threshold_proportional(temp_fc_mat, 0.05);
             temp_fc_mat_4_1f = threshold_proportional(temp_fc_mat, 0.05);
-            %             Different results with Judie's code             
-%             C = temp_fc_mat;
-%             for r = 1:nROI
-%                 nodeStrength(r) = sum(abs(temp_fc_mat(:,r)));
-%             end
-%             
-%             cLims = [-max(abs(temp_fc_mat(:))) max(abs(temp_fc_mat(:)))];
-%             %     [~,I] = maxk(nodeStrength,1+floor((1-thresh)*nROI));
-%             [~,ind]=sort(nodeStrength,'descend');
-%             I=ind(1:1+floor((1-thresh_val)*nROI));
-%             C_thresh=zeros(nROI,nROI);
-%             for j=1:nROI
-%                 for k=1:nROI
-%                     if(ismember(j,I)&&ismember(k,I))
-%                         C_thresh(j,k)=C(j,k);
-%                     end
-%                 end
-%             end
-%             C_thresh(C_thresh==0)=0;
-%             thresh_node_mats(subi, fci,:,:,freqi) = C_thresh;
             
             
             % Now threshold further using specparam results
