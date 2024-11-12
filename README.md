@@ -1,7 +1,7 @@
 
 **PROJECT**
 These scripts were used for the analyses described in the paper 'Functional connectivity is dominated by aperiodic, rather than oscillatory, coupling'. This project aims to evaluate the contribution of aperiodic activity in estimating 
-functional connectivity. To address this, we tested whether and how aperiodic activity impacts the reconstruction of putative oscillatory functional networks in two independent human EEG databases (n = 59, n = 103) during resting-state. 
+functional connectivity. To address this, we tested whether and how aperiodic activity impacts the reconstruction of putative oscillatory functional networks in two independent human EEG databases (n = 59, n = 103) during resting-state. These scripts are tailored to the organization of the database from the SRM project (dataset B), downloaded and then imported into Brainstorm. Careful attention must be paid to the data structure if you are using a tool other than Brainstorm. Some comments are included in the scripts to help adapt them to the structure of our database (dataset A). 
 
 **SCRIPTS**
 The compute_avg_mat.m script computes the epoch-averaged functional connectivity matrix for each subject and for each connectivity metric (PLV, ciPLV, wPLI, AEC and orthoAEC). This script is used for both approaches (classical pipeline and
